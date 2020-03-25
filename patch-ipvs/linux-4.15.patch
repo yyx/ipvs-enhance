@@ -1,0 +1,23 @@
+diff -Nur kernel-src/linux-4.15/net/netfilter/ipvs/0 build-ipvs/linux-4.15-ipvs/0
+--- kernel-src/linux-4.15/net/netfilter/ipvs/0	1970-01-01 08:00:00.000000000 +0800
++++ build-ipvs/linux-4.15-ipvs/0	2020-03-24 16:22:34.986158273 +0800
+@@ -0,0 +1,2 @@
++KERNELDIR ?=/lib/modules/$(shell uname -r)/build
++	$(MAKE) -C $(KERNELDIR) M=$(PWD) $(CONFIGS) modules
+diff -Nur kernel-src/linux-4.15/net/netfilter/ipvs/Makefile build-ipvs/linux-4.15-ipvs/Makefile
+--- kernel-src/linux-4.15/net/netfilter/ipvs/Makefile	2018-01-29 05:20:33.000000000 +0800
++++ build-ipvs/linux-4.15-ipvs/Makefile	2020-03-24 16:22:34.950158267 +0800
+@@ -41,3 +41,13 @@
+ 
+ # IPVS connection template retrievers
+ obj-$(CONFIG_IP_VS_PE_SIP) += ip_vs_pe_sip.o
++# build ipvs as kernel module out of kernel source tree
++KERNELDIR ?=/lib/modules/$(shell uname -r)/build
++PWD :=$(shell pwd)
++default:
++	$(MAKE) -C $(KERNELDIR) M=$(PWD) $(CONFIGS) modules
++
++clean:
++	@rm -rf *.o *~ core .depend .*.cmd *.ko *.ko.unsigned *.mod.c .tmp_versions Module.symvers modules.order *.o.ur-safe .cache.mk
++
++.PHONY: modules modules_install clean
